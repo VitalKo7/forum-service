@@ -34,7 +34,7 @@ public class UserAccountController {
     }
 
     @DeleteMapping("/user/{login}")
-    public UserDto removeUser(String login) {
+    public UserDto removeUser(@PathVariable String login) {
         return userAccountService.removeUser(login);
     }
 
@@ -43,15 +43,17 @@ public class UserAccountController {
         return userAccountService.updateUser(login, userEditDto);
     }
 
-    @PutMapping("/user/{login}/role/{{role}}")
+
+    @PutMapping("/user/{login}/role/{role}")
     public RolesDto addRole(@PathVariable String login, @PathVariable String role) {
         return userAccountService.changeRolesList(login, role, true);
     }
 
-    @DeleteMapping("/user/{login}/role/{{role}}")
+    @DeleteMapping("/user/{login}/role/{role}")
     public RolesDto deleteRole(@PathVariable String login, @PathVariable String role) {
         return userAccountService.changeRolesList(login, role, false);
     }
+
 
     @PutMapping("/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
