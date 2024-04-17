@@ -12,12 +12,13 @@ import ait.cohort34.accounting.model.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @RequiredArgsConstructor
-public class UserAccountServiceImpl implements UserAccountService {
+public class UserAccountServiceImpl implements UserAccountService, CommandLineRunner {
 
     private final UserAccountRepository userAccountRepository;
     private final ModelMapper modelMapper;
@@ -107,5 +108,10 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccount.setPassword(password);
 
         userAccountRepository.save(userAccount);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+
     }
 }
