@@ -8,6 +8,7 @@ import ait.cohort34.accounting.dto.UserRegisterDto;
 import ait.cohort34.accounting.dto.exceptions.IncorrectRoleException;
 import ait.cohort34.accounting.dto.exceptions.UserExistsException;
 import ait.cohort34.accounting.dto.exceptions.UserNotFoundException;
+import ait.cohort34.accounting.model.Role;
 import ait.cohort34.accounting.model.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -112,6 +113,13 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public void run(String... args) throws Exception {
+        if (!userAccountRepository.existsById("admin")) {
+            String password = BCrypt.hashpw("admin", BCrypt.gensalt());
+            UserAccount userAccount = new UserAccount("admin", password, "", "");
+            userAccount.addRole(Role.MODERATOR.name());
+            userAccount.addRole(Role.ADMINISTRATOR.name());
+            userAccountRepository.save(userAccount);
+        }
 
     }
 }
