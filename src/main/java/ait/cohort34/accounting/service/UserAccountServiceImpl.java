@@ -11,9 +11,9 @@ import ait.cohort34.accounting.dto.exceptions.UserNotFoundException;
 import ait.cohort34.accounting.model.Role;
 import ait.cohort34.accounting.model.UserAccount;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -21,8 +21,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserAccountServiceImpl implements UserAccountService, CommandLineRunner {
 
-    private final UserAccountRepository userAccountRepository;
-    private final ModelMapper modelMapper;
+    final UserAccountRepository userAccountRepository;
+    final ModelMapper modelMapper;
+    final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto register(UserRegisterDto userRegisterDto) {
@@ -37,7 +38,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
         UserAccount userAccount = modelMapper.map(userRegisterDto, UserAccount.class);
 
-        String password = BCrypt.hashpw(userRegisterDto.getPassword(), BCrypt.gensalt());
+        String password = passwordEncoder.encode(userRegisterDto.getPassword());
         userAccount.setPassword(password);
 
         userAccountRepository.save(userAccount);
@@ -105,7 +106,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
     public void changePassword(String login, String newPassword) {
         UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 
-        String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        String password = passwordEncoder.encode(newPassword);
         userAccount.setPassword(password);
 
         userAccountRepository.save(userAccount);
@@ -114,7 +115,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
     @Override
     public void run(String... args) throws Exception {
         if (!userAccountRepository.existsById("admin")) {
-            String password = BCrypt.hashpw("admin", BCrypt.gensalt());
+            String password = passwordEncoder.encode("admin");
             UserAccount userAccount = new UserAccount("admin", password, "", "");
             userAccount.addRole(Role.MODERATOR.name());
             userAccount.addRole(Role.ADMINISTRATOR.name());

@@ -32,6 +32,7 @@ public class UserAccountController {
     @PostMapping("/login")
 //    public UserDto login(@RequestHeader("Authorization") String token) {
 //        System.out.println(token);
+//    public UserDto login(Principal principal) {
     public UserDto login(Principal principal) {
         return userAccountService.getUser(principal.getName());
     }
