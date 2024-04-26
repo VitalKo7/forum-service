@@ -26,17 +26,17 @@ public class PostController {
         return postService.addNewPost(author, newPostDto);
     }
 
-    @GetMapping("post/{id}")
+    @GetMapping("/post/{id}")
     public PostDto findPostById(@PathVariable String id) {
         return postService.findPostById(id);
     }
 
-    @DeleteMapping("post/{id}")
+    @DeleteMapping("/post/{id}")
     public PostDto removePost(@PathVariable String id) {
         return postService.removePost(id);
     }
 
-    @PutMapping("post/{id}")
+    @PutMapping("/post/{id}")
     public PostDto updatePost(@PathVariable String id, @RequestBody NewPostDto newPostDto) {
         return postService.updatePost(id, newPostDto);
     }
